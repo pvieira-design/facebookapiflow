@@ -1,6 +1,7 @@
 import crypto from "crypto";
 
-const FLOW_PRIVATE_KEY = process.env.FLOW_PRIVATE_KEY ?? "";
+// Handle both real newlines and escaped \n from env vars
+const FLOW_PRIVATE_KEY = (process.env.FLOW_PRIVATE_KEY ?? "").replace(/\\n/g, "\n");
 const FLOW_PASSPHRASE = process.env.FLOW_PASSPHRASE ?? "";
 
 export function decryptRequest(body: {
