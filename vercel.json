@@ -1,5 +1,5 @@
 {
-  "buildCommand": "npm run build --workspace web",
+  "buildCommand": "npm run db:generate --workspace @faceapiads/db && npm run build --workspace web",
   "installCommand": "npm install",
   "framework": "nextjs",
   "outputDirectory": "apps/web/.next"
