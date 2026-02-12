@@ -66,14 +66,10 @@ function buildScreenData(
 
   if (!node || stepKey === "END") {
     return {
-      screen: "SUCCESS",
+      screen: "COMPLETE",
       data: {
-        extension_message_response: {
-          params: {
-            flow_token: (state as Record<string, unknown>).flow_token ?? "completed",
-            ...state,
-          },
-        },
+        title: "Avaliação concluída!",
+        body: "Obrigado por completar sua avaliação de sono. Em breve você receberá seu resultado personalizado.",
       },
     };
   }
@@ -166,9 +162,10 @@ function buildScreenData(
 
   // Should never reach here (logic nodes are resolved before)
   return {
-    screen: "SUCCESS",
+    screen: "COMPLETE",
     data: {
-      extension_message_response: { params: { ...state } },
+      title: "Avaliação concluída!",
+      body: "Obrigado por completar sua avaliação de sono.",
     },
   };
 }

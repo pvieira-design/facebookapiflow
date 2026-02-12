@@ -2,11 +2,11 @@
   "version": "7.3",
   "data_api_version": "3.0",
   "routing_model": {
-    "LANDING": ["SINGLE_SELECT", "MULTI_SELECT", "TEXT_INPUT", "INSIGHT"],
-    "SINGLE_SELECT": ["SINGLE_SELECT", "MULTI_SELECT", "TEXT_INPUT", "INSIGHT"],
-    "MULTI_SELECT": ["SINGLE_SELECT", "MULTI_SELECT", "TEXT_INPUT", "INSIGHT"],
-    "TEXT_INPUT": ["SINGLE_SELECT", "MULTI_SELECT", "TEXT_INPUT", "INSIGHT"],
-    "INSIGHT": ["SINGLE_SELECT", "MULTI_SELECT", "TEXT_INPUT", "INSIGHT"]
+    "LANDING": ["SINGLE_SELECT", "MULTI_SELECT", "TEXT_INPUT", "INSIGHT", "COMPLETE"],
+    "SINGLE_SELECT": ["MULTI_SELECT", "TEXT_INPUT", "INSIGHT", "COMPLETE"],
+    "MULTI_SELECT": ["TEXT_INPUT", "INSIGHT", "COMPLETE"],
+    "TEXT_INPUT": ["INSIGHT", "COMPLETE"],
+    "INSIGHT": ["COMPLETE"]
   },
   "screens": [
     {
@@ -396,6 +396,49 @@
                     "_step": "${data._step}",
                     "_history": "${data._history}"
                   }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "COMPLETE",
+      "title": "Avaliação Concluída",
+      "terminal": true,
+      "success": true,
+      "data": {
+        "title": {
+          "type": "string",
+          "__example__": "Avaliação concluída!"
+        },
+        "body": {
+          "type": "string",
+          "__example__": "Obrigado por completar sua avaliação de sono. Em breve você receberá seu resultado personalizado."
+        }
+      },
+      "layout": {
+        "type": "SingleColumnLayout",
+        "children": [
+          {
+            "type": "Form",
+            "name": "form",
+            "children": [
+              {
+                "type": "TextHeading",
+                "text": "${data.title}"
+              },
+              {
+                "type": "TextBody",
+                "text": "${data.body}"
+              },
+              {
+                "type": "Footer",
+                "label": "Finalizar",
+                "on-click-action": {
+                  "name": "complete",
+                  "payload": {}
                 }
               }
             ]
