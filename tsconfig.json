@@ -1,0 +1,3 @@
+{
+  "extends": "@faceapiads/config/tsconfig.base.json"
+}
