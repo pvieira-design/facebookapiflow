@@ -1,0 +1,400 @@
+{
+  "version": "7.3",
+  "data_api_version": "3.0",
+  "screens": [
+    {
+      "id": "LANDING",
+      "title": "Avaliação de Sono",
+      "terminal": false,
+      "data": {
+        "headline": {
+          "type": "string",
+          "__example__": "Descubra por que você não dorme bem em apenas 3 minutos."
+        },
+        "subtext": {
+          "type": "string",
+          "__example__": "Avaliação rápida e personalizada usada por médicos."
+        },
+        "badge_text": {
+          "type": "string",
+          "__example__": "Baseado no PSQI — padrão internacional"
+        },
+        "question_label": {
+          "type": "string",
+          "__example__": "Quanto tempo você leva para pegar no sono?"
+        },
+        "options": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "string" },
+              "title": { "type": "string" }
+            }
+          },
+          "__example__": [
+            { "id": "opt1", "title": "Menos de 15 minutos" }
+          ]
+        },
+        "_state": { "type": "string", "__example__": "{}" },
+        "_step": { "type": "string", "__example__": "landing" },
+        "_history": { "type": "string", "__example__": "[]" }
+      },
+      "layout": {
+        "type": "SingleColumnLayout",
+        "children": [
+          {
+            "type": "Form",
+            "name": "form",
+            "children": [
+              {
+                "type": "TextHeading",
+                "text": "${data.headline}"
+              },
+              {
+                "type": "TextBody",
+                "text": "${data.subtext}"
+              },
+              {
+                "type": "TextCaption",
+                "text": "${data.badge_text}"
+              },
+              {
+                "type": "RadioButtonsGroup",
+                "name": "answer",
+                "label": "${data.question_label}",
+                "required": true,
+                "data-source": "${data.options}"
+              },
+              {
+                "type": "Footer",
+                "label": "Começar avaliação",
+                "on-click-action": {
+                  "name": "data_exchange",
+                  "payload": {
+                    "answer": "${form.answer}",
+                    "_state": "${data._state}",
+                    "_step": "${data._step}",
+                    "_history": "${data._history}"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "SINGLE_SELECT",
+      "title": "Avaliação de Sono",
+      "terminal": false,
+      "data": {
+        "title": {
+          "type": "string",
+          "__example__": "Como você avalia a qualidade do seu sono?"
+        },
+        "progress": {
+          "type": "string",
+          "__example__": "Pergunta 3 de 30"
+        },
+        "options": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "string" },
+              "title": { "type": "string" }
+            }
+          },
+          "__example__": [
+            { "id": "opt1", "title": "Opção 1" }
+          ]
+        },
+        "_state": { "type": "string", "__example__": "{}" },
+        "_step": { "type": "string", "__example__": "qualidade_sono" },
+        "_history": { "type": "string", "__example__": "[]" }
+      },
+      "layout": {
+        "type": "SingleColumnLayout",
+        "children": [
+          {
+            "type": "Form",
+            "name": "form",
+            "children": [
+              {
+                "type": "TextCaption",
+                "text": "${data.progress}"
+              },
+              {
+                "type": "TextHeading",
+                "text": "${data.title}"
+              },
+              {
+                "type": "RadioButtonsGroup",
+                "name": "answer",
+                "label": "Selecione",
+                "required": true,
+                "data-source": "${data.options}"
+              },
+              {
+                "type": "Footer",
+                "label": "Continuar",
+                "on-click-action": {
+                  "name": "data_exchange",
+                  "payload": {
+                    "answer": "${form.answer}",
+                    "_state": "${data._state}",
+                    "_step": "${data._step}",
+                    "_history": "${data._history}"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "MULTI_SELECT",
+      "title": "Avaliação de Sono",
+      "terminal": false,
+      "data": {
+        "title": {
+          "type": "string",
+          "__example__": "Quais métodos você já usou para dormir?"
+        },
+        "description": {
+          "type": "string",
+          "__example__": "Selecione todos que se aplicam"
+        },
+        "progress": {
+          "type": "string",
+          "__example__": "Pergunta 15 de 30"
+        },
+        "options": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "string" },
+              "title": { "type": "string" }
+            }
+          },
+          "__example__": [
+            { "id": "opt1", "title": "Opção 1" }
+          ]
+        },
+        "_state": { "type": "string", "__example__": "{}" },
+        "_step": { "type": "string", "__example__": "metodos_dormir" },
+        "_history": { "type": "string", "__example__": "[]" }
+      },
+      "layout": {
+        "type": "SingleColumnLayout",
+        "children": [
+          {
+            "type": "Form",
+            "name": "form",
+            "children": [
+              {
+                "type": "TextCaption",
+                "text": "${data.progress}"
+              },
+              {
+                "type": "TextHeading",
+                "text": "${data.title}"
+              },
+              {
+                "type": "TextBody",
+                "text": "${data.description}"
+              },
+              {
+                "type": "CheckboxGroup",
+                "name": "answer",
+                "label": "Selecione",
+                "required": true,
+                "data-source": "${data.options}"
+              },
+              {
+                "type": "Footer",
+                "label": "Continuar",
+                "on-click-action": {
+                  "name": "data_exchange",
+                  "payload": {
+                    "answer": "${form.answer}",
+                    "_state": "${data._state}",
+                    "_step": "${data._step}",
+                    "_history": "${data._history}"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "TEXT_INPUT",
+      "title": "Avaliação de Sono",
+      "terminal": false,
+      "data": {
+        "title": {
+          "type": "string",
+          "__example__": "Estamos montando seu perfil de sono"
+        },
+        "description": {
+          "type": "string",
+          "__example__": "Para enviar seu resultado personalizado"
+        },
+        "field_label_1": {
+          "type": "string",
+          "__example__": "Seu nome"
+        },
+        "field_placeholder_1": {
+          "type": "string",
+          "__example__": "Ex: Maria"
+        },
+        "field_label_2": {
+          "type": "string",
+          "__example__": "Telefone WhatsApp"
+        },
+        "field_placeholder_2": {
+          "type": "string",
+          "__example__": "(21) 99999-9999"
+        },
+        "info_title": {
+          "type": "string",
+          "__example__": "Falta pouco para o seu resultado"
+        },
+        "info_description": {
+          "type": "string",
+          "__example__": "Enviaremos suas recomendações por WhatsApp."
+        },
+        "_state": { "type": "string", "__example__": "{}" },
+        "_step": { "type": "string", "__example__": "captura_telefone" },
+        "_history": { "type": "string", "__example__": "[]" }
+      },
+      "layout": {
+        "type": "SingleColumnLayout",
+        "children": [
+          {
+            "type": "Form",
+            "name": "form",
+            "children": [
+              {
+                "type": "TextHeading",
+                "text": "${data.title}"
+              },
+              {
+                "type": "TextBody",
+                "text": "${data.description}"
+              },
+              {
+                "type": "TextInput",
+                "name": "field_1",
+                "label": "${data.field_label_1}",
+                "input-type": "text",
+                "required": true,
+                "helper-text": "${data.field_placeholder_1}"
+              },
+              {
+                "type": "TextInput",
+                "name": "field_2",
+                "label": "${data.field_label_2}",
+                "input-type": "phone",
+                "required": true,
+                "helper-text": "${data.field_placeholder_2}"
+              },
+              {
+                "type": "TextSubheading",
+                "text": "${data.info_title}"
+              },
+              {
+                "type": "TextBody",
+                "text": "${data.info_description}"
+              },
+              {
+                "type": "Footer",
+                "label": "Continuar avaliação",
+                "on-click-action": {
+                  "name": "data_exchange",
+                  "payload": {
+                    "field_1": "${form.field_1}",
+                    "field_2": "${form.field_2}",
+                    "_state": "${data._state}",
+                    "_step": "${data._step}",
+                    "_history": "${data._history}"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "INSIGHT",
+      "title": "Avaliação de Sono",
+      "terminal": false,
+      "data": {
+        "heading": {
+          "type": "string",
+          "__example__": "Entenda as fases do sono"
+        },
+        "body": {
+          "type": "string",
+          "__example__": "O sono é dividido em ciclos de 90 minutos..."
+        },
+        "tip_title": {
+          "type": "string",
+          "__example__": "Dica importante"
+        },
+        "tip_description": {
+          "type": "string",
+          "__example__": "Cada fase é essencial para sua saúde."
+        },
+        "_state": { "type": "string", "__example__": "{}" },
+        "_step": { "type": "string", "__example__": "insight_fases_sono" },
+        "_history": { "type": "string", "__example__": "[]" }
+      },
+      "layout": {
+        "type": "SingleColumnLayout",
+        "children": [
+          {
+            "type": "Form",
+            "name": "form",
+            "children": [
+              {
+                "type": "TextHeading",
+                "text": "${data.heading}"
+              },
+              {
+                "type": "TextBody",
+                "text": "${data.body}"
+              },
+              {
+                "type": "TextSubheading",
+                "text": "${data.tip_title}"
+              },
+              {
+                "type": "TextBody",
+                "text": "${data.tip_description}"
+              },
+              {
+                "type": "Footer",
+                "label": "Continuar",
+                "on-click-action": {
+                  "name": "data_exchange",
+                  "payload": {
+                    "_state": "${data._state}",
+                    "_step": "${data._step}",
+                    "_history": "${data._history}"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,249 @@
+{
+    "version": "7.3",
+    "screens": [
+        {
+            "id": "SATISFACAO",
+            "title": "Satisfação com o Tratamento",
+            "data": {},
+            "layout": {
+                "type": "SingleColumnLayout",
+                "children": [
+                    {
+                        "type": "Form",
+                        "name": "form",
+                        "children": [
+                            {
+                                "type": "TextHeading",
+                                "text": "Como tem sido o início do seu tratamento?"
+                            },
+                            {
+                                "type": "RadioButtonsGroup",
+                                "label": "Selecione uma opção:",
+                                "required": true,
+                                "name": "satisfacao_tratamento",
+                                "data-source": [
+                                    { "id": "adorando", "title": "🟢 Adorando! Senti melhora" },
+                                    { "id": "adaptando", "title": "🟡 Me adaptando, avaliando" },
+                                    { "id": "sem_melhora", "title": "🔴 Não senti melhora ainda" },
+                                    { "id": "parei", "title": "⚫ Parei de usar" }
+                                ]
+                            },
+                            {
+                                "type": "Footer",
+                                "label": "Continuar",
+                                "on-click-action": {
+                                    "name": "navigate",
+                                    "next": { "type": "screen", "name": "ADESAO" },
+                                    "payload": {
+                                        "satisfacao_tratamento": "${form.satisfacao_tratamento}"
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "id": "ADESAO",
+            "title": "Adesão à Dosagem",
+            "data": {
+                "satisfacao_tratamento": { "type": "string", "__example__": "adorando" }
+            },
+            "layout": {
+                "type": "SingleColumnLayout",
+                "children": [
+                    {
+                        "type": "Form",
+                        "name": "form",
+                        "children": [
+                            {
+                                "type": "TextHeading",
+                                "text": "Você está seguindo a progressão de dosagem da receita?"
+                            },
+                            {
+                                "type": "RadioButtonsGroup",
+                                "label": "Selecione uma opção:",
+                                "required": true,
+                                "name": "adesao_dosagem",
+                                "data-source": [
+                                    { "id": "sim_exato", "title": "Sim, como indicado" },
+                                    { "id": "ajustei", "title": "Ajustei por conta" },
+                                    { "id": "dose_inicial", "title": "Ainda na dose inicial" },
+                                    { "id": "nao_seguindo", "title": "Não estou seguindo" }
+                                ]
+                            },
+                            {
+                                "type": "Footer",
+                                "label": "Continuar",
+                                "on-click-action": {
+                                    "name": "navigate",
+                                    "next": { "type": "screen", "name": "MELHORAS" },
+                                    "payload": {
+                                        "satisfacao_tratamento": "${data.satisfacao_tratamento}",
+                                        "adesao_dosagem": "${form.adesao_dosagem}"
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "id": "MELHORAS",
+            "title": "Melhoras Percebidas",
+            "data": {
+                "satisfacao_tratamento": { "type": "string", "__example__": "adorando" },
+                "adesao_dosagem": { "type": "string", "__example__": "sim_exato" }
+            },
+            "layout": {
+                "type": "SingleColumnLayout",
+                "children": [
+                    {
+                        "type": "Form",
+                        "name": "form",
+                        "children": [
+                            {
+                                "type": "TextHeading",
+                                "text": "Você notou melhora em algum aspecto?"
+                            },
+                            {
+                                "type": "CheckboxGroup",
+                                "label": "Selecione todos que se aplicam:",
+                                "required": true,
+                                "name": "melhoras_percebidas",
+                                "data-source": [
+                                    { "id": "sono", "title": "Qualidade do sono" },
+                                    { "id": "ansiedade", "title": "Redução da ansiedade" },
+                                    { "id": "humor", "title": "Melhora no humor" },
+                                    { "id": "dores", "title": "Redução de dores" },
+                                    { "id": "foco", "title": "Mais foco/concentração" },
+                                    { "id": "nenhuma", "title": "Ainda não notei melhoras" }
+                                ]
+                            },
+                            {
+                                "type": "Footer",
+                                "label": "Continuar",
+                                "on-click-action": {
+                                    "name": "navigate",
+                                    "next": { "type": "screen", "name": "EFEITOS" },
+                                    "payload": {
+                                        "satisfacao_tratamento": "${data.satisfacao_tratamento}",
+                                        "adesao_dosagem": "${data.adesao_dosagem}",
+                                        "melhoras_percebidas": "${form.melhoras_percebidas}"
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "id": "EFEITOS",
+            "title": "Efeitos Indesejados",
+            "data": {
+                "satisfacao_tratamento": { "type": "string", "__example__": "adorando" },
+                "adesao_dosagem": { "type": "string", "__example__": "sim_exato" },
+                "melhoras_percebidas": { "type": "array", "items": { "type": "string" }, "__example__": [] }
+            },
+            "layout": {
+                "type": "SingleColumnLayout",
+                "children": [
+                    {
+                        "type": "Form",
+                        "name": "form",
+                        "children": [
+                            {
+                                "type": "TextHeading",
+                                "text": "Você sentiu algum efeito indesejado?"
+                            },
+                            {
+                                "type": "CheckboxGroup",
+                                "label": "Selecione todos que se aplicam:",
+                                "required": true,
+                                "name": "efeitos_indesejados",
+                                "data-source": [
+                                    { "id": "nenhum", "title": "Não, nenhum" },
+                                    { "id": "sonolencia", "title": "Sonolência excessiva" },
+                                    { "id": "tontura", "title": "Tontura" },
+                                    { "id": "apetite", "title": "Alteração no apetite" },
+                                    { "id": "ansiedade", "title": "Aumento da ansiedade" },
+                                    { "id": "outro", "title": "Outro efeito" }
+                                ]
+                            },
+                            {
+                                "type": "Footer",
+                                "label": "Continuar",
+                                "on-click-action": {
+                                    "name": "navigate",
+                                    "next": { "type": "screen", "name": "SUPORTE" },
+                                    "payload": {
+                                        "satisfacao_tratamento": "${data.satisfacao_tratamento}",
+                                        "adesao_dosagem": "${data.adesao_dosagem}",
+                                        "melhoras_percebidas": "${data.melhoras_percebidas}",
+                                        "efeitos_indesejados": "${form.efeitos_indesejados}"
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "id": "SUPORTE",
+            "title": "Necessidade de Suporte",
+            "terminal": true,
+            "success": true,
+            "data": {
+                "satisfacao_tratamento": { "type": "string", "__example__": "adorando" },
+                "adesao_dosagem": { "type": "string", "__example__": "sim_exato" },
+                "melhoras_percebidas": { "type": "array", "items": { "type": "string" }, "__example__": [] },
+                "efeitos_indesejados": { "type": "array", "items": { "type": "string" }, "__example__": [] }
+            },
+            "layout": {
+                "type": "SingleColumnLayout",
+                "children": [
+                    {
+                        "type": "Form",
+                        "name": "form",
+                        "children": [
+                            {
+                                "type": "TextHeading",
+                                "text": "Gostaria de falar com nossa equipe?"
+                            },
+                            {
+                                "type": "RadioButtonsGroup",
+                                "label": "Selecione uma opção:",
+                                "required": true,
+                                "name": "precisa_suporte",
+                                "data-source": [
+                                    { "id": "consulta_retorno", "title": "Agendar consulta retorno" },
+                                    { "id": "duvidas", "title": "Tenho dúvidas" },
+                                    { "id": "novo_pedido", "title": "Fazer novo pedido" },
+                                    { "id": "tudo_bem", "title": "Não, está tudo bem" }
+                                ]
+                            },
+                            {
+                                "type": "Footer",
+                                "label": "✅ Finalizar",
+                                "on-click-action": {
+                                    "name": "complete",
+                                    "payload": {
+                                        "satisfacao_tratamento": "${data.satisfacao_tratamento}",
+                                        "adesao_dosagem": "${data.adesao_dosagem}",
+                                        "melhoras_percebidas": "${data.melhoras_percebidas}",
+                                        "efeitos_indesejados": "${data.efeitos_indesejados}",
+                                        "precisa_suporte": "${form.precisa_suporte}"
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    ]
+}
