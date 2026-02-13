@@ -4,12 +4,17 @@ import prisma from "@faceapiads/db";
 const HEALTH_CHECK_URL =
   "https://app-click-health-check.vercel.app/api/whatsapp";
 
+const GUPSHUP_API_URL = "https://api.gupshup.io/wa/api/v1/msg";
+const GUPSHUP_API_KEY = "40x2rzk1huslegq8lze0zdcttjvcm4ve";
+const GUPSHUP_SOURCE = "5521993686082";
+
 /**
  * Webhook that receives WhatsApp Flow responses from GupShup.
  *
  * 1. Extracts phone, name and answers from GupShup payload
  * 2. Forwards to health-check API to generate the results page
- * 3. Saves everything to the database
+ * 3. Sends the results link to the patient via WhatsApp
+ * 4. Saves everything to the database
  */
 export async function POST(req: NextRequest) {
   try {
@@ -41,6 +46,15 @@ export async function POST(req: NextRequest) {
       JSON.stringify(healthCheckData),
     );
 
+    // Send results link via WhatsApp
+    if (healthCheckData.link) {
+      await sendWhatsAppMessage(
+        flowData.telefone,
+        flowData.nome,
+        healthCheckData.link,
+      );
+    }
+
     // Save to database
     const record = await prisma.flowResponse.create({
       data: {
@@ -63,6 +77,39 @@ export async function POST(req: NextRequest) {
       { status: 500 },
     );
   }
+}
+
+async function sendWhatsAppMessage(
+  telefone: string,
+  nome: string,
+  link: string,
+) {
+  const firstName = nome.split(" ")[0] || "Olá";
+
+  const message = JSON.stringify({
+    type: "cta_url",
+    body: `${firstName}, sua análise personalizada de sono está pronta! 🌙\n\nCom base nas suas respostas, preparamos um relatório completo com insights sobre o seu padrão de sono e recomendações específicas para o seu caso.\n\nToque no botão abaixo para acessar:`,
+    display_text: "Ver minha análise de sono 📊",
+    url: link,
+  });
+
+  const params = new URLSearchParams({
+    source: GUPSHUP_SOURCE,
+    destination: telefone,
+    channel: "whatsapp",
+    message,
+  });
+
+  const res = await fetch(GUPSHUP_API_URL, {
+    method: "POST",
+    headers: {
+      apikey: GUPSHUP_API_KEY,
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    body: params.toString(),
+  });
+
+  console.log("[Flow Response] WhatsApp message sent:", res.status);
 }
 
 function extractFlowData(body: Record<string, unknown>) {
