@@ -1,0 +1,7 @@
+model FlowResponse {
+  id        String   @id @default(cuid())
+  payload   Json
+  createdAt DateTime @default(now())
+
+  @@map("flow_response")
+}
