@@ -84,21 +84,18 @@ async function sendWhatsAppMessage(
   nome: string,
   link: string,
 ) {
-  const firstName = nome.split(" ")[0] || "Olá";
+  const firstName = nome.split(" ")[0] || "Ola";
 
   const message = JSON.stringify({
     type: "cta_url",
-    body: `${firstName}, sua análise personalizada de sono está pronta! 🌙\n\nCom base nas suas respostas, preparamos um relatório completo com insights sobre o seu padrão de sono e recomendações específicas para o seu caso.\n\nToque no botão abaixo para acessar:`,
-    display_text: "Ver minha análise de sono 📊",
+    body: `${firstName}, sua analise personalizada de sono esta pronta! Com base nas suas respostas, preparamos um relatorio completo com insights sobre o seu padrao de sono e recomendacoes especificas para o seu caso.`,
     url: link,
+    display_text: "Ver meu resultado",
   });
 
-  const params = new URLSearchParams({
-    source: GUPSHUP_SOURCE,
-    destination: telefone,
-    channel: "whatsapp",
-    message,
-  });
+  // GupShup cta_url requires raw body — URLSearchParams URL-encodes the JSON
+  // which prevents cta_url from being delivered.
+  const body = `source=${GUPSHUP_SOURCE}&destination=${telefone}&channel=whatsapp&message=${message}`;
 
   const res = await fetch(GUPSHUP_API_URL, {
     method: "POST",
@@ -106,10 +103,11 @@ async function sendWhatsAppMessage(
       apikey: GUPSHUP_API_KEY,
       "Content-Type": "application/x-www-form-urlencoded",
     },
-    body: params.toString(),
+    body,
   });
 
-  console.log("[Flow Response] WhatsApp message sent:", res.status);
+  const resText = await res.text();
+  console.log("[Flow Response] WhatsApp message sent:", res.status, resText);
 }
 
 function extractFlowData(body: Record<string, unknown>) {
