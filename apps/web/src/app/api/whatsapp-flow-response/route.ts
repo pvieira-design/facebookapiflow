@@ -8,6 +8,12 @@ const GUPSHUP_API_URL = "https://api.gupshup.io/wa/api/v1/msg";
 const GUPSHUP_API_KEY = "40x2rzk1huslegq8lze0zdcttjvcm4ve";
 const GUPSHUP_SOURCE = "5521993686082";
 
+const CHATGURU_API_URL = "https://s21.chatguru.app/api/v1";
+const CHATGURU_API_KEY =
+  "CKW0ZPD7R8KNC34DOK8CKPABRM9OU417IHKF7R5J1JRB1JG5LP6MT719YGKY69QB";
+const CHATGURU_ACCOUNT_ID = "66eb2b7691396bcd24682bab";
+const CHATGURU_PHONE_ID = "66ec42044b5a871161feffa9";
+
 /**
  * Webhook that receives WhatsApp Flow responses from GupShup.
  *
@@ -28,16 +34,19 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ success: true, skipped: true });
     }
 
-    // Forward to health-check API
-    const healthCheckRes = await fetch(HEALTH_CHECK_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        telefone: flowData.telefone,
-        nome: flowData.nome,
-        respostas: flowData.respostas,
+    // Forward to health-check API + add ChatGuru annotation (in parallel)
+    const [healthCheckRes] = await Promise.all([
+      fetch(HEALTH_CHECK_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          telefone: flowData.telefone,
+          nome: flowData.nome,
+          respostas: flowData.respostas,
+        }),
       }),
-    });
+      addChatGuruAnnotation(flowData.telefone, flowData.nome, flowData.respostas),
+    ]);
 
     const healthCheckData = await healthCheckRes.json();
 
@@ -53,6 +62,14 @@ export async function POST(req: NextRequest) {
         flowData.nome,
         healthCheckData.link,
       );
+
+      // Send follow-up message via ChatGuru after 10s (fire-and-forget)
+      setTimeout(() => {
+        sendChatGuruMessage(flowData.telefone, flowData.nome).catch(
+          (err: unknown) =>
+            console.error("[Flow Response] ChatGuru follow-up error:", err),
+        );
+      }, 10_000);
     }
 
     // Save to database
@@ -108,6 +125,67 @@ async function sendWhatsAppMessage(
 
   const resText = await res.text();
   console.log("[Flow Response] WhatsApp message sent:", res.status, resText);
+}
+
+async function sendChatGuruMessage(telefone: string, nome: string) {
+  const firstName = nome.split(" ")[0] || "";
+
+  const params = new URLSearchParams({
+    action: "message_send",
+    key: CHATGURU_API_KEY,
+    account_id: CHATGURU_ACCOUNT_ID,
+    phone_id: CHATGURU_PHONE_ID,
+    chat_number: telefone,
+    text: `Ficamos à disposição, ${firstName}! 😊`,
+  });
+
+  const res = await fetch(`${CHATGURU_API_URL}?${params.toString()}`, {
+    method: "POST",
+  });
+
+  const resText = await res.text();
+  console.log("[Flow Response] ChatGuru follow-up sent:", res.status, resText);
+}
+
+async function addChatGuruAnnotation(
+  telefone: string,
+  nome: string,
+  respostas: Record<string, string>,
+) {
+  try {
+    const firstName = nome.split(" ")[0] || "Paciente";
+
+    const respostasFormatadas = Object.entries(respostas)
+      .map(([pergunta, resposta]) => `• ${pergunta}: ${resposta}`)
+      .join("\n");
+
+    const noteText = [
+      `✅ ${firstName} respondeu o questionário de sono!`,
+      "",
+      "📋 Respostas:",
+      respostasFormatadas,
+      "",
+      "⚠️ O chat está ativo por 24 horas para interagir com o paciente.",
+    ].join("\n");
+
+    const params = new URLSearchParams({
+      action: "note_add",
+      key: CHATGURU_API_KEY,
+      account_id: CHATGURU_ACCOUNT_ID,
+      phone_id: CHATGURU_PHONE_ID,
+      chat_number: telefone,
+      note_text: noteText,
+    });
+
+    const res = await fetch(`${CHATGURU_API_URL}?${params.toString()}`, {
+      method: "POST",
+    });
+
+    const resText = await res.text();
+    console.log("[Flow Response] ChatGuru annotation:", res.status, resText);
+  } catch (error) {
+    console.error("[Flow Response] ChatGuru annotation error:", error);
+  }
 }
 
 function extractFlowData(body: Record<string, unknown>) {
