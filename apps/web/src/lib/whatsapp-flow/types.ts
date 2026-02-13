@@ -52,6 +52,7 @@ export type FlowNode = QuestionStep | InsightStep | LogicNode;
 export type FlowState = Record<string, string | string[]>;
 
 export interface ScreenResponse {
+  version: string;
   screen: string;
   data: Record<string, unknown>;
 }

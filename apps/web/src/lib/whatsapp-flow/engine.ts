@@ -66,6 +66,7 @@ function buildScreenData(
 
   if (!node || stepKey === "END") {
     return {
+      version: "3.0",
       screen: "COMPLETE",
       data: {
         title: "Avaliação concluída!",
@@ -80,6 +81,7 @@ function buildScreenData(
   if (node.type === "insight") {
     const insight = node as InsightStep;
     return {
+      version: "3.0",
       screen: "INSIGHT",
       data: {
         heading: insight.heading,
@@ -98,6 +100,7 @@ function buildScreenData(
 
     if (step.screen === "LANDING") {
       return {
+        version: "3.0",
         screen: "LANDING",
         data: {
           headline: step.headline ?? step.title,
@@ -114,6 +117,7 @@ function buildScreenData(
 
     if (step.screen === "TEXT_INPUT") {
       return {
+        version: "3.0",
         screen: "TEXT_INPUT",
         data: {
           title: step.title,
@@ -133,6 +137,7 @@ function buildScreenData(
 
     if (step.screen === "MULTI_SELECT") {
       return {
+        version: "3.0",
         screen: "MULTI_SELECT",
         data: {
           title: step.title,
@@ -148,6 +153,7 @@ function buildScreenData(
 
     // SINGLE_SELECT (default)
     return {
+      version: "3.0",
       screen: "SINGLE_SELECT",
       data: {
         title: step.title,
@@ -162,6 +168,7 @@ function buildScreenData(
 
   // Should never reach here (logic nodes are resolved before)
   return {
+    version: "3.0",
     screen: "COMPLETE",
     data: {
       title: "Avaliação concluída!",
@@ -178,13 +185,13 @@ export function handleFlowRequest(body: DecryptedBody): ScreenResponse {
 
   // Health check ping
   if (action === "ping") {
-    return { screen: "", data: { status: "active" } };
+    return { version: "3.0", screen: "", data: { status: "active" } };
   }
 
   // Error acknowledgement
   if (data?.error) {
     console.error("WhatsApp Flow error:", data);
-    return { screen: "", data: { acknowledged: true } };
+    return { version: "3.0", screen: "", data: { acknowledged: true } };
   }
 
   // INIT — first time opening the flow

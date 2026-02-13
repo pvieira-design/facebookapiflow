@@ -1,126 +1,32 @@
 {
   "version": "7.3",
-  "data_api_version": "3.0",
   "routing_model": {
-    "LANDING": ["SINGLE_SELECT", "MULTI_SELECT", "TEXT_INPUT", "INSIGHT", "COMPLETE"],
-    "SINGLE_SELECT": ["MULTI_SELECT", "TEXT_INPUT", "INSIGHT", "COMPLETE"],
-    "MULTI_SELECT": ["TEXT_INPUT", "INSIGHT", "COMPLETE"],
-    "TEXT_INPUT": ["INSIGHT", "COMPLETE"],
-    "INSIGHT": ["COMPLETE"]
+    "IDADE": ["GENERO"],
+    "GENERO": ["HORA_DORMIR"],
+    "HORA_DORMIR": ["HORA_ACORDAR"],
+    "HORA_ACORDAR": ["LATENCIA"],
+    "LATENCIA": ["INSIGHT_LATENCIA"],
+    "INSIGHT_LATENCIA": ["QUALIDADE"],
+    "QUALIDADE": ["DURACAO"],
+    "DURACAO": ["INSIGHT_DURACAO"],
+    "INSIGHT_DURACAO": ["DESPERTAR"],
+    "DESPERTAR": ["CONSISTENCIA"],
+    "CONSISTENCIA": ["ACORDAR"],
+    "ACORDAR": ["SONOLENCIA"],
+    "SONOLENCIA": ["ESTRESSE"],
+    "ESTRESSE": ["TEMPO_PROBLEMAS"],
+    "TEMPO_PROBLEMAS": ["FATORES"],
+    "FATORES": ["METODOS"],
+    "METODOS": ["OBJETIVOS"],
+    "OBJETIVOS": ["INTERESSE"],
+    "INTERESSE": ["INSIGHT_RESULTADO"],
+    "INSIGHT_RESULTADO": ["COMPLETE"]
   },
   "screens": [
     {
-      "id": "LANDING",
-      "title": "Avaliação de Sono",
+      "id": "IDADE",
+      "title": "Sobre você",
       "terminal": false,
-      "data": {
-        "headline": {
-          "type": "string",
-          "__example__": "Descubra por que você não dorme bem em apenas 3 minutos."
-        },
-        "subtext": {
-          "type": "string",
-          "__example__": "Avaliação rápida e personalizada usada por médicos."
-        },
-        "badge_text": {
-          "type": "string",
-          "__example__": "Baseado no PSQI — padrão internacional"
-        },
-        "question_label": {
-          "type": "string",
-          "__example__": "Quanto tempo você leva para pegar no sono?"
-        },
-        "options": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "properties": {
-              "id": { "type": "string" },
-              "title": { "type": "string" }
-            }
-          },
-          "__example__": [
-            { "id": "opt1", "title": "Menos de 15 minutos" }
-          ]
-        },
-        "_state": { "type": "string", "__example__": "{}" },
-        "_step": { "type": "string", "__example__": "landing" },
-        "_history": { "type": "string", "__example__": "[]" }
-      },
-      "layout": {
-        "type": "SingleColumnLayout",
-        "children": [
-          {
-            "type": "Form",
-            "name": "form",
-            "children": [
-              {
-                "type": "TextHeading",
-                "text": "${data.headline}"
-              },
-              {
-                "type": "TextBody",
-                "text": "${data.subtext}"
-              },
-              {
-                "type": "TextCaption",
-                "text": "${data.badge_text}"
-              },
-              {
-                "type": "RadioButtonsGroup",
-                "name": "answer",
-                "label": "${data.question_label}",
-                "required": true,
-                "data-source": "${data.options}"
-              },
-              {
-                "type": "Footer",
-                "label": "Começar avaliação",
-                "on-click-action": {
-                  "name": "data_exchange",
-                  "payload": {
-                    "answer": "${form.answer}",
-                    "_state": "${data._state}",
-                    "_step": "${data._step}",
-                    "_history": "${data._history}"
-                  }
-                }
-              }
-            ]
-          }
-        ]
-      }
-    },
-    {
-      "id": "SINGLE_SELECT",
-      "title": "Avaliação de Sono",
-      "terminal": false,
-      "data": {
-        "title": {
-          "type": "string",
-          "__example__": "Como você avalia a qualidade do seu sono?"
-        },
-        "progress": {
-          "type": "string",
-          "__example__": "Pergunta 3 de 30"
-        },
-        "options": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "properties": {
-              "id": { "type": "string" },
-              "title": { "type": "string" }
-            }
-          },
-          "__example__": [
-            { "id": "opt1", "title": "Opção 1" }
-          ]
-        },
-        "_state": { "type": "string", "__example__": "{}" },
-        "_step": { "type": "string", "__example__": "qualidade_sono" },
-        "_history": { "type": "string", "__example__": "[]" }
-      },
       "layout": {
         "type": "SingleColumnLayout",
         "children": [
@@ -130,29 +36,30 @@
             "children": [
               {
                 "type": "TextCaption",
-                "text": "${data.progress}"
-              },
-              {
-                "type": "TextHeading",
-                "text": "${data.title}"
+                "text": "Pergunta 1 de 17"
               },
               {
                 "type": "RadioButtonsGroup",
-                "name": "answer",
-                "label": "Selecione",
+                "name": "idade",
+                "label": "Qual a sua faixa etária?",
                 "required": true,
-                "data-source": "${data.options}"
+                "data-source": [
+                  { "id": "18_24", "title": "18-24 anos" },
+                  { "id": "25_34", "title": "25-34 anos" },
+                  { "id": "35_44", "title": "35-44 anos" },
+                  { "id": "45_54", "title": "45-54 anos" },
+                  { "id": "55_64", "title": "55-64 anos" },
+                  { "id": "65_mais", "title": "65+ anos" }
+                ]
               },
               {
                 "type": "Footer",
                 "label": "Continuar",
                 "on-click-action": {
-                  "name": "data_exchange",
+                  "name": "navigate",
+                  "next": { "type": "screen", "name": "GENERO" },
                   "payload": {
-                    "answer": "${form.answer}",
-                    "_state": "${data._state}",
-                    "_step": "${data._step}",
-                    "_history": "${data._history}"
+                    "idade": "${form.idade}"
                   }
                 }
               }
@@ -162,38 +69,11 @@
       }
     },
     {
-      "id": "MULTI_SELECT",
-      "title": "Avaliação de Sono",
+      "id": "GENERO",
+      "title": "Sobre você",
       "terminal": false,
       "data": {
-        "title": {
-          "type": "string",
-          "__example__": "Quais métodos você já usou para dormir?"
-        },
-        "description": {
-          "type": "string",
-          "__example__": "Selecione todos que se aplicam"
-        },
-        "progress": {
-          "type": "string",
-          "__example__": "Pergunta 15 de 30"
-        },
-        "options": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "properties": {
-              "id": { "type": "string" },
-              "title": { "type": "string" }
-            }
-          },
-          "__example__": [
-            { "id": "opt1", "title": "Opção 1" }
-          ]
-        },
-        "_state": { "type": "string", "__example__": "{}" },
-        "_step": { "type": "string", "__example__": "metodos_dormir" },
-        "_history": { "type": "string", "__example__": "[]" }
+        "idade": { "type": "string", "__example__": "35_44" }
       },
       "layout": {
         "type": "SingleColumnLayout",
@@ -204,33 +84,28 @@
             "children": [
               {
                 "type": "TextCaption",
-                "text": "${data.progress}"
+                "text": "Pergunta 2 de 17"
               },
               {
-                "type": "TextHeading",
-                "text": "${data.title}"
-              },
-              {
-                "type": "TextBody",
-                "text": "${data.description}"
-              },
-              {
-                "type": "CheckboxGroup",
-                "name": "answer",
-                "label": "Selecione",
+                "type": "RadioButtonsGroup",
+                "name": "genero",
+                "label": "Qual o seu gênero?",
                 "required": true,
-                "data-source": "${data.options}"
+                "data-source": [
+                  { "id": "feminino", "title": "Feminino" },
+                  { "id": "masculino", "title": "Masculino" },
+                  { "id": "nao_dizer", "title": "Prefiro não dizer" }
+                ]
               },
               {
                 "type": "Footer",
                 "label": "Continuar",
                 "on-click-action": {
-                  "name": "data_exchange",
+                  "name": "navigate",
+                  "next": { "type": "screen", "name": "HORA_DORMIR" },
                   "payload": {
-                    "answer": "${form.answer}",
-                    "_state": "${data._state}",
-                    "_step": "${data._step}",
-                    "_history": "${data._history}"
+                    "idade": "${data.idade}",
+                    "genero": "${form.genero}"
                   }
                 }
               }
@@ -240,45 +115,168 @@
       }
     },
     {
-      "id": "TEXT_INPUT",
-      "title": "Avaliação de Sono",
+      "id": "HORA_DORMIR",
+      "title": "Seus horários",
       "terminal": false,
       "data": {
-        "title": {
-          "type": "string",
-          "__example__": "Estamos montando seu perfil de sono"
-        },
-        "description": {
-          "type": "string",
-          "__example__": "Para enviar seu resultado personalizado"
-        },
-        "field_label_1": {
-          "type": "string",
-          "__example__": "Seu nome"
-        },
-        "field_placeholder_1": {
-          "type": "string",
-          "__example__": "Ex: Maria"
-        },
-        "field_label_2": {
-          "type": "string",
-          "__example__": "Telefone WhatsApp"
-        },
-        "field_placeholder_2": {
-          "type": "string",
-          "__example__": "(21) 99999-9999"
-        },
-        "info_title": {
-          "type": "string",
-          "__example__": "Falta pouco para o seu resultado"
-        },
-        "info_description": {
-          "type": "string",
-          "__example__": "Enviaremos suas recomendações por WhatsApp."
-        },
-        "_state": { "type": "string", "__example__": "{}" },
-        "_step": { "type": "string", "__example__": "captura_telefone" },
-        "_history": { "type": "string", "__example__": "[]" }
+        "idade": { "type": "string", "__example__": "35_44" },
+        "genero": { "type": "string", "__example__": "feminino" }
+      },
+      "layout": {
+        "type": "SingleColumnLayout",
+        "children": [
+          {
+            "type": "Form",
+            "name": "form",
+            "children": [
+              {
+                "type": "TextCaption",
+                "text": "Pergunta 3 de 17"
+              },
+              {
+                "type": "RadioButtonsGroup",
+                "name": "hora_dormir",
+                "label": "A que horas você costuma ir dormir?",
+                "required": true,
+                "data-source": [
+                  { "id": "antes_22h", "title": "Antes das 22h" },
+                  { "id": "22h_00h", "title": "Entre 22h e 00h" },
+                  { "id": "00h_02h", "title": "Entre 00h e 02h" },
+                  { "id": "depois_02h", "title": "Depois das 02h" }
+                ]
+              },
+              {
+                "type": "Footer",
+                "label": "Continuar",
+                "on-click-action": {
+                  "name": "navigate",
+                  "next": { "type": "screen", "name": "HORA_ACORDAR" },
+                  "payload": {
+                    "idade": "${data.idade}",
+                    "genero": "${data.genero}",
+                    "hora_dormir": "${form.hora_dormir}"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "HORA_ACORDAR",
+      "title": "Seus horários",
+      "terminal": false,
+      "data": {
+        "idade": { "type": "string", "__example__": "35_44" },
+        "genero": { "type": "string", "__example__": "feminino" },
+        "hora_dormir": { "type": "string", "__example__": "00h_02h" }
+      },
+      "layout": {
+        "type": "SingleColumnLayout",
+        "children": [
+          {
+            "type": "Form",
+            "name": "form",
+            "children": [
+              {
+                "type": "TextCaption",
+                "text": "Pergunta 4 de 17"
+              },
+              {
+                "type": "RadioButtonsGroup",
+                "name": "hora_acordar",
+                "label": "A que horas você costuma acordar?",
+                "required": true,
+                "data-source": [
+                  { "id": "antes_6h", "title": "Antes das 6h" },
+                  { "id": "6h_8h", "title": "Entre 6h e 8h" },
+                  { "id": "8h_10h", "title": "Entre 8h e 10h" },
+                  { "id": "depois_10h", "title": "Depois das 10h" }
+                ]
+              },
+              {
+                "type": "Footer",
+                "label": "Continuar",
+                "on-click-action": {
+                  "name": "navigate",
+                  "next": { "type": "screen", "name": "LATENCIA" },
+                  "payload": {
+                    "idade": "${data.idade}",
+                    "genero": "${data.genero}",
+                    "hora_dormir": "${data.hora_dormir}",
+                    "hora_acordar": "${form.hora_acordar}"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "LATENCIA",
+      "title": "Sobre seu sono",
+      "terminal": false,
+      "data": {
+        "idade": { "type": "string", "__example__": "35_44" },
+        "genero": { "type": "string", "__example__": "feminino" },
+        "hora_dormir": { "type": "string", "__example__": "00h_02h" },
+        "hora_acordar": { "type": "string", "__example__": "6h_8h" }
+      },
+      "layout": {
+        "type": "SingleColumnLayout",
+        "children": [
+          {
+            "type": "Form",
+            "name": "form",
+            "children": [
+              {
+                "type": "TextCaption",
+                "text": "Pergunta 5 de 17"
+              },
+              {
+                "type": "RadioButtonsGroup",
+                "name": "q1_latencia",
+                "label": "Quanto tempo você leva para pegar no sono?",
+                "required": true,
+                "data-source": [
+                  { "id": "menos_15", "title": "Menos de 15 minutos" },
+                  { "id": "15_30", "title": "Entre 15 e 30 minutos" },
+                  { "id": "30_60", "title": "Entre 30 e 60 minutos" },
+                  { "id": "mais_60", "title": "Mais de 60 minutos" }
+                ]
+              },
+              {
+                "type": "Footer",
+                "label": "Continuar",
+                "on-click-action": {
+                  "name": "navigate",
+                  "next": { "type": "screen", "name": "INSIGHT_LATENCIA" },
+                  "payload": {
+                    "idade": "${data.idade}",
+                    "genero": "${data.genero}",
+                    "hora_dormir": "${data.hora_dormir}",
+                    "hora_acordar": "${data.hora_acordar}",
+                    "q1_latencia": "${form.q1_latencia}"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "INSIGHT_LATENCIA",
+      "title": "Entenda seu sono",
+      "terminal": false,
+      "data": {
+        "idade": { "type": "string", "__example__": "35_44" },
+        "genero": { "type": "string", "__example__": "feminino" },
+        "hora_dormir": { "type": "string", "__example__": "00h_02h" },
+        "hora_acordar": { "type": "string", "__example__": "6h_8h" },
+        "q1_latencia": { "type": "string", "__example__": "30_60" }
       },
       "layout": {
         "type": "SingleColumnLayout",
@@ -289,47 +287,36 @@
             "children": [
               {
                 "type": "TextHeading",
-                "text": "${data.title}"
+                "text": "💡 Sobre a latência do sono"
               },
               {
                 "type": "TextBody",
-                "text": "${data.description}"
+                "text": "O tempo que você leva para adormecer é chamado de \"latência do sono\". Idealmente, deveria ser entre 10 e 20 minutos."
               },
               {
-                "type": "TextInput",
-                "name": "field_1",
-                "label": "${data.field_label_1}",
-                "input-type": "text",
-                "required": true,
-                "helper-text": "${data.field_placeholder_1}"
-              },
-              {
-                "type": "TextInput",
-                "name": "field_2",
-                "label": "${data.field_label_2}",
-                "input-type": "phone",
-                "required": true,
-                "helper-text": "${data.field_placeholder_2}"
+                "type": "TextBody",
+                "text": "Adormecer muito rápido (menos de 5 min) pode indicar privação de sono. Demorar mais de 30 minutos é um sinal de insônia inicial — um dos distúrbios mais comuns."
               },
               {
                 "type": "TextSubheading",
-                "text": "${data.info_title}"
+                "text": "Você sabia?"
               },
               {
                 "type": "TextBody",
-                "text": "${data.info_description}"
+                "text": "Cerca de 73 milhões de brasileiros sofrem de insônia. A boa notícia: existem abordagens naturais com evidência científica que podem ajudar."
               },
               {
                 "type": "Footer",
                 "label": "Continuar avaliação",
                 "on-click-action": {
-                  "name": "data_exchange",
+                  "name": "navigate",
+                  "next": { "type": "screen", "name": "QUALIDADE" },
                   "payload": {
-                    "field_1": "${form.field_1}",
-                    "field_2": "${form.field_2}",
-                    "_state": "${data._state}",
-                    "_step": "${data._step}",
-                    "_history": "${data._history}"
+                    "idade": "${data.idade}",
+                    "genero": "${data.genero}",
+                    "hora_dormir": "${data.hora_dormir}",
+                    "hora_acordar": "${data.hora_acordar}",
+                    "q1_latencia": "${data.q1_latencia}"
                   }
                 }
               }
@@ -339,29 +326,129 @@
       }
     },
     {
-      "id": "INSIGHT",
-      "title": "Avaliação de Sono",
+      "id": "QUALIDADE",
+      "title": "Qualidade do sono",
       "terminal": false,
       "data": {
-        "heading": {
-          "type": "string",
-          "__example__": "Entenda as fases do sono"
-        },
-        "body": {
-          "type": "string",
-          "__example__": "O sono é dividido em ciclos de 90 minutos..."
-        },
-        "tip_title": {
-          "type": "string",
-          "__example__": "Dica importante"
-        },
-        "tip_description": {
-          "type": "string",
-          "__example__": "Cada fase é essencial para sua saúde."
-        },
-        "_state": { "type": "string", "__example__": "{}" },
-        "_step": { "type": "string", "__example__": "insight_fases_sono" },
-        "_history": { "type": "string", "__example__": "[]" }
+        "idade": { "type": "string", "__example__": "35_44" },
+        "genero": { "type": "string", "__example__": "feminino" },
+        "hora_dormir": { "type": "string", "__example__": "00h_02h" },
+        "hora_acordar": { "type": "string", "__example__": "6h_8h" },
+        "q1_latencia": { "type": "string", "__example__": "30_60" }
+      },
+      "layout": {
+        "type": "SingleColumnLayout",
+        "children": [
+          {
+            "type": "Form",
+            "name": "form",
+            "children": [
+              {
+                "type": "TextCaption",
+                "text": "Pergunta 6 de 17"
+              },
+              {
+                "type": "RadioButtonsGroup",
+                "name": "q2_qualidade",
+                "label": "Como você avalia a qualidade do seu sono?",
+                "required": true,
+                "data-source": [
+                  { "id": "muito_boa", "title": "Muito boa" },
+                  { "id": "boa", "title": "Boa" },
+                  { "id": "ruim", "title": "Ruim" },
+                  { "id": "muito_ruim", "title": "Muito ruim" }
+                ]
+              },
+              {
+                "type": "Footer",
+                "label": "Continuar",
+                "on-click-action": {
+                  "name": "navigate",
+                  "next": { "type": "screen", "name": "DURACAO" },
+                  "payload": {
+                    "idade": "${data.idade}",
+                    "genero": "${data.genero}",
+                    "hora_dormir": "${data.hora_dormir}",
+                    "hora_acordar": "${data.hora_acordar}",
+                    "q1_latencia": "${data.q1_latencia}",
+                    "q2_qualidade": "${form.q2_qualidade}"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "DURACAO",
+      "title": "Duração do sono",
+      "terminal": false,
+      "data": {
+        "idade": { "type": "string", "__example__": "35_44" },
+        "genero": { "type": "string", "__example__": "feminino" },
+        "hora_dormir": { "type": "string", "__example__": "00h_02h" },
+        "hora_acordar": { "type": "string", "__example__": "6h_8h" },
+        "q1_latencia": { "type": "string", "__example__": "30_60" },
+        "q2_qualidade": { "type": "string", "__example__": "ruim" }
+      },
+      "layout": {
+        "type": "SingleColumnLayout",
+        "children": [
+          {
+            "type": "Form",
+            "name": "form",
+            "children": [
+              {
+                "type": "TextCaption",
+                "text": "Pergunta 7 de 17"
+              },
+              {
+                "type": "RadioButtonsGroup",
+                "name": "q4_duracao",
+                "label": "Quantas horas você dorme por noite (em média)?",
+                "required": true,
+                "data-source": [
+                  { "id": "menos_5h", "title": "Menos de 5 horas" },
+                  { "id": "5_6h", "title": "Entre 5 e 6 horas" },
+                  { "id": "6_7h", "title": "Entre 6 e 7 horas" },
+                  { "id": "mais_7h", "title": "Mais de 7 horas" }
+                ]
+              },
+              {
+                "type": "Footer",
+                "label": "Continuar",
+                "on-click-action": {
+                  "name": "navigate",
+                  "next": { "type": "screen", "name": "INSIGHT_DURACAO" },
+                  "payload": {
+                    "idade": "${data.idade}",
+                    "genero": "${data.genero}",
+                    "hora_dormir": "${data.hora_dormir}",
+                    "hora_acordar": "${data.hora_acordar}",
+                    "q1_latencia": "${data.q1_latencia}",
+                    "q2_qualidade": "${data.q2_qualidade}",
+                    "q4_duracao": "${form.q4_duracao}"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "INSIGHT_DURACAO",
+      "title": "Análise parcial",
+      "terminal": false,
+      "data": {
+        "idade": { "type": "string", "__example__": "35_44" },
+        "genero": { "type": "string", "__example__": "feminino" },
+        "hora_dormir": { "type": "string", "__example__": "00h_02h" },
+        "hora_acordar": { "type": "string", "__example__": "6h_8h" },
+        "q1_latencia": { "type": "string", "__example__": "30_60" },
+        "q2_qualidade": { "type": "string", "__example__": "ruim" },
+        "q4_duracao": { "type": "string", "__example__": "5_6h" }
       },
       "layout": {
         "type": "SingleColumnLayout",
@@ -372,29 +459,811 @@
             "children": [
               {
                 "type": "TextHeading",
-                "text": "${data.heading}"
+                "text": "💡 Sobre a duração do sono"
               },
               {
                 "type": "TextBody",
-                "text": "${data.body}"
+                "text": "Adultos precisam de 7 a 9 horas de sono por noite. Dormir menos de 6 horas está associado a maior risco de doenças cardiovasculares, obesidade e problemas de memória."
+              },
+              {
+                "type": "TextBody",
+                "text": "Acordar durante a noite fragmenta os ciclos de sono, impedindo que você atinja o sono profundo — a fase mais restauradora."
               },
               {
                 "type": "TextSubheading",
-                "text": "${data.tip_title}"
+                "text": "O impacto no dia a dia"
               },
               {
                 "type": "TextBody",
-                "text": "${data.tip_description}"
+                "text": "A sonolência diurna é um dos sinais mais claros de sono insuficiente. Ela afeta concentração, humor, produtividade e até a segurança no trânsito."
+              },
+              {
+                "type": "Footer",
+                "label": "Continuar avaliação",
+                "on-click-action": {
+                  "name": "navigate",
+                  "next": { "type": "screen", "name": "DESPERTAR" },
+                  "payload": {
+                    "idade": "${data.idade}",
+                    "genero": "${data.genero}",
+                    "hora_dormir": "${data.hora_dormir}",
+                    "hora_acordar": "${data.hora_acordar}",
+                    "q1_latencia": "${data.q1_latencia}",
+                    "q2_qualidade": "${data.q2_qualidade}",
+                    "q4_duracao": "${data.q4_duracao}"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "DESPERTAR",
+      "title": "Despertares noturnos",
+      "terminal": false,
+      "data": {
+        "idade": { "type": "string", "__example__": "35_44" },
+        "genero": { "type": "string", "__example__": "feminino" },
+        "hora_dormir": { "type": "string", "__example__": "00h_02h" },
+        "hora_acordar": { "type": "string", "__example__": "6h_8h" },
+        "q1_latencia": { "type": "string", "__example__": "30_60" },
+        "q2_qualidade": { "type": "string", "__example__": "ruim" },
+        "q4_duracao": { "type": "string", "__example__": "5_6h" }
+      },
+      "layout": {
+        "type": "SingleColumnLayout",
+        "children": [
+          {
+            "type": "Form",
+            "name": "form",
+            "children": [
+              {
+                "type": "TextCaption",
+                "text": "Pergunta 8 de 17"
+              },
+              {
+                "type": "RadioButtonsGroup",
+                "name": "q3_despertar",
+                "label": "Você acorda durante a noite?",
+                "required": true,
+                "data-source": [
+                  { "id": "nunca", "title": "Nunca ou quase nunca" },
+                  { "id": "1_2x", "title": "1 a 2 vezes por semana" },
+                  { "id": "3_4x", "title": "3 a 4 vezes por semana" },
+                  { "id": "todo_dia", "title": "Praticamente toda noite" }
+                ]
               },
               {
                 "type": "Footer",
                 "label": "Continuar",
                 "on-click-action": {
-                  "name": "data_exchange",
+                  "name": "navigate",
+                  "next": { "type": "screen", "name": "CONSISTENCIA" },
                   "payload": {
-                    "_state": "${data._state}",
-                    "_step": "${data._step}",
-                    "_history": "${data._history}"
+                    "idade": "${data.idade}",
+                    "genero": "${data.genero}",
+                    "hora_dormir": "${data.hora_dormir}",
+                    "hora_acordar": "${data.hora_acordar}",
+                    "q1_latencia": "${data.q1_latencia}",
+                    "q2_qualidade": "${data.q2_qualidade}",
+                    "q4_duracao": "${data.q4_duracao}",
+                    "q3_despertar": "${form.q3_despertar}"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "CONSISTENCIA",
+      "title": "Regularidade do sono",
+      "terminal": false,
+      "data": {
+        "idade": { "type": "string", "__example__": "35_44" },
+        "genero": { "type": "string", "__example__": "feminino" },
+        "hora_dormir": { "type": "string", "__example__": "00h_02h" },
+        "hora_acordar": { "type": "string", "__example__": "6h_8h" },
+        "q1_latencia": { "type": "string", "__example__": "30_60" },
+        "q2_qualidade": { "type": "string", "__example__": "ruim" },
+        "q4_duracao": { "type": "string", "__example__": "5_6h" },
+        "q3_despertar": { "type": "string", "__example__": "3_4x" }
+      },
+      "layout": {
+        "type": "SingleColumnLayout",
+        "children": [
+          {
+            "type": "Form",
+            "name": "form",
+            "children": [
+              {
+                "type": "TextCaption",
+                "text": "Pergunta 9 de 17"
+              },
+              {
+                "type": "RadioButtonsGroup",
+                "name": "consistencia_sono",
+                "label": "Como é a regularidade dos seus horários de sono?",
+                "required": true,
+                "data-source": [
+                  { "id": "muito_consistente", "title": "Muito consistente" },
+                  { "id": "relativamente", "title": "Relativamente consistente" },
+                  { "id": "variavel", "title": "Variável" },
+                  { "id": "muito_variavel", "title": "Muito variável" },
+                  { "id": "consistente_ruim", "title": "Consistentemente ruim" }
+                ]
+              },
+              {
+                "type": "Footer",
+                "label": "Continuar",
+                "on-click-action": {
+                  "name": "navigate",
+                  "next": { "type": "screen", "name": "ACORDAR" },
+                  "payload": {
+                    "idade": "${data.idade}",
+                    "genero": "${data.genero}",
+                    "hora_dormir": "${data.hora_dormir}",
+                    "hora_acordar": "${data.hora_acordar}",
+                    "q1_latencia": "${data.q1_latencia}",
+                    "q2_qualidade": "${data.q2_qualidade}",
+                    "q4_duracao": "${data.q4_duracao}",
+                    "q3_despertar": "${data.q3_despertar}",
+                    "consistencia_sono": "${form.consistencia_sono}"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "ACORDAR",
+      "title": "Ao acordar",
+      "terminal": false,
+      "data": {
+        "idade": { "type": "string", "__example__": "35_44" },
+        "genero": { "type": "string", "__example__": "feminino" },
+        "hora_dormir": { "type": "string", "__example__": "00h_02h" },
+        "hora_acordar": { "type": "string", "__example__": "6h_8h" },
+        "q1_latencia": { "type": "string", "__example__": "30_60" },
+        "q2_qualidade": { "type": "string", "__example__": "ruim" },
+        "q4_duracao": { "type": "string", "__example__": "5_6h" },
+        "q3_despertar": { "type": "string", "__example__": "3_4x" },
+        "consistencia_sono": { "type": "string", "__example__": "variavel" }
+      },
+      "layout": {
+        "type": "SingleColumnLayout",
+        "children": [
+          {
+            "type": "Form",
+            "name": "form",
+            "children": [
+              {
+                "type": "TextCaption",
+                "text": "Pergunta 10 de 17"
+              },
+              {
+                "type": "RadioButtonsGroup",
+                "name": "como_sente_acordar",
+                "label": "Como você se sente ao acordar?",
+                "required": true,
+                "data-source": [
+                  { "id": "descansado", "title": "Descansado(a) e com energia" },
+                  { "id": "cansado", "title": "Ainda cansado(a)" },
+                  { "id": "muito_cansado", "title": "Muito cansado(a)" }
+                ]
+              },
+              {
+                "type": "Footer",
+                "label": "Continuar",
+                "on-click-action": {
+                  "name": "navigate",
+                  "next": { "type": "screen", "name": "SONOLENCIA" },
+                  "payload": {
+                    "idade": "${data.idade}",
+                    "genero": "${data.genero}",
+                    "hora_dormir": "${data.hora_dormir}",
+                    "hora_acordar": "${data.hora_acordar}",
+                    "q1_latencia": "${data.q1_latencia}",
+                    "q2_qualidade": "${data.q2_qualidade}",
+                    "q4_duracao": "${data.q4_duracao}",
+                    "q3_despertar": "${data.q3_despertar}",
+                    "consistencia_sono": "${data.consistencia_sono}",
+                    "como_sente_acordar": "${form.como_sente_acordar}"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "SONOLENCIA",
+      "title": "Sonolência diurna",
+      "terminal": false,
+      "data": {
+        "idade": { "type": "string", "__example__": "35_44" },
+        "genero": { "type": "string", "__example__": "feminino" },
+        "hora_dormir": { "type": "string", "__example__": "00h_02h" },
+        "hora_acordar": { "type": "string", "__example__": "6h_8h" },
+        "q1_latencia": { "type": "string", "__example__": "30_60" },
+        "q2_qualidade": { "type": "string", "__example__": "ruim" },
+        "q4_duracao": { "type": "string", "__example__": "5_6h" },
+        "q3_despertar": { "type": "string", "__example__": "3_4x" },
+        "consistencia_sono": { "type": "string", "__example__": "variavel" },
+        "como_sente_acordar": { "type": "string", "__example__": "cansado" }
+      },
+      "layout": {
+        "type": "SingleColumnLayout",
+        "children": [
+          {
+            "type": "Form",
+            "name": "form",
+            "children": [
+              {
+                "type": "TextCaption",
+                "text": "Pergunta 11 de 17"
+              },
+              {
+                "type": "RadioButtonsGroup",
+                "name": "q5_sonolencia",
+                "label": "Sente sonolência ou cansaço durante o dia?",
+                "required": true,
+                "data-source": [
+                  { "id": "nunca", "title": "Nunca" },
+                  { "id": "as_vezes", "title": "Às vezes" },
+                  { "id": "frequente", "title": "Frequentemente" },
+                  { "id": "sempre", "title": "Todos os dias" }
+                ]
+              },
+              {
+                "type": "Footer",
+                "label": "Continuar",
+                "on-click-action": {
+                  "name": "navigate",
+                  "next": { "type": "screen", "name": "ESTRESSE" },
+                  "payload": {
+                    "idade": "${data.idade}",
+                    "genero": "${data.genero}",
+                    "hora_dormir": "${data.hora_dormir}",
+                    "hora_acordar": "${data.hora_acordar}",
+                    "q1_latencia": "${data.q1_latencia}",
+                    "q2_qualidade": "${data.q2_qualidade}",
+                    "q4_duracao": "${data.q4_duracao}",
+                    "q3_despertar": "${data.q3_despertar}",
+                    "consistencia_sono": "${data.consistencia_sono}",
+                    "como_sente_acordar": "${data.como_sente_acordar}",
+                    "q5_sonolencia": "${form.q5_sonolencia}"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "ESTRESSE",
+      "title": "Estresse",
+      "terminal": false,
+      "data": {
+        "idade": { "type": "string", "__example__": "35_44" },
+        "genero": { "type": "string", "__example__": "feminino" },
+        "hora_dormir": { "type": "string", "__example__": "00h_02h" },
+        "hora_acordar": { "type": "string", "__example__": "6h_8h" },
+        "q1_latencia": { "type": "string", "__example__": "30_60" },
+        "q2_qualidade": { "type": "string", "__example__": "ruim" },
+        "q4_duracao": { "type": "string", "__example__": "5_6h" },
+        "q3_despertar": { "type": "string", "__example__": "3_4x" },
+        "consistencia_sono": { "type": "string", "__example__": "variavel" },
+        "como_sente_acordar": { "type": "string", "__example__": "cansado" },
+        "q5_sonolencia": { "type": "string", "__example__": "frequente" }
+      },
+      "layout": {
+        "type": "SingleColumnLayout",
+        "children": [
+          {
+            "type": "Form",
+            "name": "form",
+            "children": [
+              {
+                "type": "TextCaption",
+                "text": "Pergunta 12 de 17"
+              },
+              {
+                "type": "RadioButtonsGroup",
+                "name": "nivel_estresse",
+                "label": "Qual seu nível de estresse atualmente?",
+                "required": true,
+                "data-source": [
+                  { "id": "baixo", "title": "Baixo / Tranquilo" },
+                  { "id": "moderado", "title": "Moderado / Normal" },
+                  { "id": "elevado", "title": "Elevado" },
+                  { "id": "muito_elevado", "title": "Muito elevado" },
+                  { "id": "extremo", "title": "Extremo / Insuportável" }
+                ]
+              },
+              {
+                "type": "Footer",
+                "label": "Continuar",
+                "on-click-action": {
+                  "name": "navigate",
+                  "next": { "type": "screen", "name": "TEMPO_PROBLEMAS" },
+                  "payload": {
+                    "idade": "${data.idade}",
+                    "genero": "${data.genero}",
+                    "hora_dormir": "${data.hora_dormir}",
+                    "hora_acordar": "${data.hora_acordar}",
+                    "q1_latencia": "${data.q1_latencia}",
+                    "q2_qualidade": "${data.q2_qualidade}",
+                    "q4_duracao": "${data.q4_duracao}",
+                    "q3_despertar": "${data.q3_despertar}",
+                    "consistencia_sono": "${data.consistencia_sono}",
+                    "como_sente_acordar": "${data.como_sente_acordar}",
+                    "q5_sonolencia": "${data.q5_sonolencia}",
+                    "nivel_estresse": "${form.nivel_estresse}"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "TEMPO_PROBLEMAS",
+      "title": "Histórico",
+      "terminal": false,
+      "data": {
+        "idade": { "type": "string", "__example__": "35_44" },
+        "genero": { "type": "string", "__example__": "feminino" },
+        "hora_dormir": { "type": "string", "__example__": "00h_02h" },
+        "hora_acordar": { "type": "string", "__example__": "6h_8h" },
+        "q1_latencia": { "type": "string", "__example__": "30_60" },
+        "q2_qualidade": { "type": "string", "__example__": "ruim" },
+        "q4_duracao": { "type": "string", "__example__": "5_6h" },
+        "q3_despertar": { "type": "string", "__example__": "3_4x" },
+        "consistencia_sono": { "type": "string", "__example__": "variavel" },
+        "como_sente_acordar": { "type": "string", "__example__": "cansado" },
+        "q5_sonolencia": { "type": "string", "__example__": "frequente" },
+        "nivel_estresse": { "type": "string", "__example__": "elevado" }
+      },
+      "layout": {
+        "type": "SingleColumnLayout",
+        "children": [
+          {
+            "type": "Form",
+            "name": "form",
+            "children": [
+              {
+                "type": "TextCaption",
+                "text": "Pergunta 13 de 17"
+              },
+              {
+                "type": "RadioButtonsGroup",
+                "name": "tempo_problemas_sono",
+                "label": "Há quanto tempo você tem problemas de sono?",
+                "required": true,
+                "data-source": [
+                  { "id": "menos_mes", "title": "Menos de 1 mês" },
+                  { "id": "um_seis_meses", "title": "1 a 6 meses" },
+                  { "id": "seis_dois_anos", "title": "6 meses a 2 anos" },
+                  { "id": "mais_dois_anos", "title": "Mais de 2 anos" }
+                ]
+              },
+              {
+                "type": "Footer",
+                "label": "Continuar",
+                "on-click-action": {
+                  "name": "navigate",
+                  "next": { "type": "screen", "name": "FATORES" },
+                  "payload": {
+                    "idade": "${data.idade}",
+                    "genero": "${data.genero}",
+                    "hora_dormir": "${data.hora_dormir}",
+                    "hora_acordar": "${data.hora_acordar}",
+                    "q1_latencia": "${data.q1_latencia}",
+                    "q2_qualidade": "${data.q2_qualidade}",
+                    "q4_duracao": "${data.q4_duracao}",
+                    "q3_despertar": "${data.q3_despertar}",
+                    "consistencia_sono": "${data.consistencia_sono}",
+                    "como_sente_acordar": "${data.como_sente_acordar}",
+                    "q5_sonolencia": "${data.q5_sonolencia}",
+                    "nivel_estresse": "${data.nivel_estresse}",
+                    "tempo_problemas_sono": "${form.tempo_problemas_sono}"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "FATORES",
+      "title": "Seus hábitos",
+      "terminal": false,
+      "data": {
+        "idade": { "type": "string", "__example__": "35_44" },
+        "genero": { "type": "string", "__example__": "feminino" },
+        "hora_dormir": { "type": "string", "__example__": "00h_02h" },
+        "hora_acordar": { "type": "string", "__example__": "6h_8h" },
+        "q1_latencia": { "type": "string", "__example__": "30_60" },
+        "q2_qualidade": { "type": "string", "__example__": "ruim" },
+        "q4_duracao": { "type": "string", "__example__": "5_6h" },
+        "q3_despertar": { "type": "string", "__example__": "3_4x" },
+        "consistencia_sono": { "type": "string", "__example__": "variavel" },
+        "como_sente_acordar": { "type": "string", "__example__": "cansado" },
+        "q5_sonolencia": { "type": "string", "__example__": "frequente" },
+        "nivel_estresse": { "type": "string", "__example__": "elevado" },
+        "tempo_problemas_sono": { "type": "string", "__example__": "mais_dois_anos" }
+      },
+      "layout": {
+        "type": "SingleColumnLayout",
+        "children": [
+          {
+            "type": "Form",
+            "name": "form",
+            "children": [
+              {
+                "type": "TextCaption",
+                "text": "Pergunta 14 de 17"
+              },
+              {
+                "type": "CheckboxGroup",
+                "name": "q6_fatores",
+                "label": "O que mais atrapalha seu sono? (selecione todos)",
+                "required": true,
+                "data-source": [
+                  { "id": "ansiedade", "title": "Ansiedade ou pensamentos acelerados" },
+                  { "id": "dor", "title": "Dor ou desconforto físico" },
+                  { "id": "telas", "title": "Uso de celular/TV antes de dormir" },
+                  { "id": "barulho", "title": "Barulho ou ambiente inadequado" },
+                  { "id": "horario", "title": "Horários irregulares de sono" },
+                  { "id": "nenhum", "title": "Nenhum desses" }
+                ]
+              },
+              {
+                "type": "Footer",
+                "label": "Continuar",
+                "on-click-action": {
+                  "name": "navigate",
+                  "next": { "type": "screen", "name": "METODOS" },
+                  "payload": {
+                    "idade": "${data.idade}",
+                    "genero": "${data.genero}",
+                    "hora_dormir": "${data.hora_dormir}",
+                    "hora_acordar": "${data.hora_acordar}",
+                    "q1_latencia": "${data.q1_latencia}",
+                    "q2_qualidade": "${data.q2_qualidade}",
+                    "q4_duracao": "${data.q4_duracao}",
+                    "q3_despertar": "${data.q3_despertar}",
+                    "consistencia_sono": "${data.consistencia_sono}",
+                    "como_sente_acordar": "${data.como_sente_acordar}",
+                    "q5_sonolencia": "${data.q5_sonolencia}",
+                    "nivel_estresse": "${data.nivel_estresse}",
+                    "tempo_problemas_sono": "${data.tempo_problemas_sono}",
+                    "q6_fatores": "${form.q6_fatores}"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "METODOS",
+      "title": "Tentativas anteriores",
+      "terminal": false,
+      "data": {
+        "idade": { "type": "string", "__example__": "35_44" },
+        "genero": { "type": "string", "__example__": "feminino" },
+        "hora_dormir": { "type": "string", "__example__": "00h_02h" },
+        "hora_acordar": { "type": "string", "__example__": "6h_8h" },
+        "q1_latencia": { "type": "string", "__example__": "30_60" },
+        "q2_qualidade": { "type": "string", "__example__": "ruim" },
+        "q4_duracao": { "type": "string", "__example__": "5_6h" },
+        "q3_despertar": { "type": "string", "__example__": "3_4x" },
+        "consistencia_sono": { "type": "string", "__example__": "variavel" },
+        "como_sente_acordar": { "type": "string", "__example__": "cansado" },
+        "q5_sonolencia": { "type": "string", "__example__": "frequente" },
+        "nivel_estresse": { "type": "string", "__example__": "elevado" },
+        "tempo_problemas_sono": { "type": "string", "__example__": "mais_dois_anos" },
+        "q6_fatores": { "type": "array", "items": { "type": "string" }, "__example__": ["ansiedade", "telas"] }
+      },
+      "layout": {
+        "type": "SingleColumnLayout",
+        "children": [
+          {
+            "type": "Form",
+            "name": "form",
+            "children": [
+              {
+                "type": "TextCaption",
+                "text": "Pergunta 15 de 17"
+              },
+              {
+                "type": "CheckboxGroup",
+                "name": "q7_metodos",
+                "label": "Já tentou algum desses para dormir melhor?",
+                "required": true,
+                "data-source": [
+                  { "id": "medicamento", "title": "Medicamento para dormir" },
+                  { "id": "melatonina", "title": "Melatonina" },
+                  { "id": "cha", "title": "Chá ou fitoterápico" },
+                  { "id": "meditacao", "title": "Meditação ou relaxamento" },
+                  { "id": "exercicio", "title": "Exercício físico" },
+                  { "id": "nenhum", "title": "Não tentei nada ainda" }
+                ]
+              },
+              {
+                "type": "Footer",
+                "label": "Continuar",
+                "on-click-action": {
+                  "name": "navigate",
+                  "next": { "type": "screen", "name": "OBJETIVOS" },
+                  "payload": {
+                    "idade": "${data.idade}",
+                    "genero": "${data.genero}",
+                    "hora_dormir": "${data.hora_dormir}",
+                    "hora_acordar": "${data.hora_acordar}",
+                    "q1_latencia": "${data.q1_latencia}",
+                    "q2_qualidade": "${data.q2_qualidade}",
+                    "q4_duracao": "${data.q4_duracao}",
+                    "q3_despertar": "${data.q3_despertar}",
+                    "consistencia_sono": "${data.consistencia_sono}",
+                    "como_sente_acordar": "${data.como_sente_acordar}",
+                    "q5_sonolencia": "${data.q5_sonolencia}",
+                    "nivel_estresse": "${data.nivel_estresse}",
+                    "tempo_problemas_sono": "${data.tempo_problemas_sono}",
+                    "q6_fatores": "${data.q6_fatores}",
+                    "q7_metodos": "${form.q7_metodos}"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "OBJETIVOS",
+      "title": "Seus objetivos",
+      "terminal": false,
+      "data": {
+        "idade": { "type": "string", "__example__": "35_44" },
+        "genero": { "type": "string", "__example__": "feminino" },
+        "hora_dormir": { "type": "string", "__example__": "00h_02h" },
+        "hora_acordar": { "type": "string", "__example__": "6h_8h" },
+        "q1_latencia": { "type": "string", "__example__": "30_60" },
+        "q2_qualidade": { "type": "string", "__example__": "ruim" },
+        "q4_duracao": { "type": "string", "__example__": "5_6h" },
+        "q3_despertar": { "type": "string", "__example__": "3_4x" },
+        "consistencia_sono": { "type": "string", "__example__": "variavel" },
+        "como_sente_acordar": { "type": "string", "__example__": "cansado" },
+        "q5_sonolencia": { "type": "string", "__example__": "frequente" },
+        "nivel_estresse": { "type": "string", "__example__": "elevado" },
+        "tempo_problemas_sono": { "type": "string", "__example__": "mais_dois_anos" },
+        "q6_fatores": { "type": "array", "items": { "type": "string" }, "__example__": ["ansiedade", "telas"] },
+        "q7_metodos": { "type": "array", "items": { "type": "string" }, "__example__": ["cha", "meditacao"] }
+      },
+      "layout": {
+        "type": "SingleColumnLayout",
+        "children": [
+          {
+            "type": "Form",
+            "name": "form",
+            "children": [
+              {
+                "type": "TextCaption",
+                "text": "Pergunta 16 de 17"
+              },
+              {
+                "type": "CheckboxGroup",
+                "name": "objetivos_tratamento",
+                "label": "O que você mais gostaria de melhorar no seu sono?",
+                "required": true,
+                "data-source": [
+                  { "id": "dormir_mais", "title": "Conseguir dormir mais horas" },
+                  { "id": "dormir_rapido", "title": "Pegar no sono mais rápido" },
+                  { "id": "nao_acordar", "title": "Parar de acordar durante a noite" },
+                  { "id": "acordar_descansado", "title": "Acordar mais descansado" },
+                  { "id": "reduzir_remedios", "title": "Reduzir outros medicamentos" },
+                  { "id": "reduzir_ansiedade", "title": "Reduzir ansiedade" },
+                  { "id": "curioso", "title": "Estou curioso(a) sobre o tratamento" }
+                ]
+              },
+              {
+                "type": "Footer",
+                "label": "Continuar",
+                "on-click-action": {
+                  "name": "navigate",
+                  "next": { "type": "screen", "name": "INTERESSE" },
+                  "payload": {
+                    "idade": "${data.idade}",
+                    "genero": "${data.genero}",
+                    "hora_dormir": "${data.hora_dormir}",
+                    "hora_acordar": "${data.hora_acordar}",
+                    "q1_latencia": "${data.q1_latencia}",
+                    "q2_qualidade": "${data.q2_qualidade}",
+                    "q4_duracao": "${data.q4_duracao}",
+                    "q3_despertar": "${data.q3_despertar}",
+                    "consistencia_sono": "${data.consistencia_sono}",
+                    "como_sente_acordar": "${data.como_sente_acordar}",
+                    "q5_sonolencia": "${data.q5_sonolencia}",
+                    "nivel_estresse": "${data.nivel_estresse}",
+                    "tempo_problemas_sono": "${data.tempo_problemas_sono}",
+                    "q6_fatores": "${data.q6_fatores}",
+                    "q7_metodos": "${data.q7_metodos}",
+                    "objetivos_tratamento": "${form.objetivos_tratamento}"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "INTERESSE",
+      "title": "Seu interesse",
+      "terminal": false,
+      "data": {
+        "idade": { "type": "string", "__example__": "35_44" },
+        "genero": { "type": "string", "__example__": "feminino" },
+        "hora_dormir": { "type": "string", "__example__": "00h_02h" },
+        "hora_acordar": { "type": "string", "__example__": "6h_8h" },
+        "q1_latencia": { "type": "string", "__example__": "30_60" },
+        "q2_qualidade": { "type": "string", "__example__": "ruim" },
+        "q4_duracao": { "type": "string", "__example__": "5_6h" },
+        "q3_despertar": { "type": "string", "__example__": "3_4x" },
+        "consistencia_sono": { "type": "string", "__example__": "variavel" },
+        "como_sente_acordar": { "type": "string", "__example__": "cansado" },
+        "q5_sonolencia": { "type": "string", "__example__": "frequente" },
+        "nivel_estresse": { "type": "string", "__example__": "elevado" },
+        "tempo_problemas_sono": { "type": "string", "__example__": "mais_dois_anos" },
+        "q6_fatores": { "type": "array", "items": { "type": "string" }, "__example__": ["ansiedade", "telas"] },
+        "q7_metodos": { "type": "array", "items": { "type": "string" }, "__example__": ["cha", "meditacao"] },
+        "objetivos_tratamento": { "type": "array", "items": { "type": "string" }, "__example__": ["dormir_rapido", "reduzir_ansiedade"] }
+      },
+      "layout": {
+        "type": "SingleColumnLayout",
+        "children": [
+          {
+            "type": "Form",
+            "name": "form",
+            "children": [
+              {
+                "type": "TextCaption",
+                "text": "Pergunta 17 de 17"
+              },
+              {
+                "type": "RadioButtonsGroup",
+                "name": "q8_interesse",
+                "label": "Tem interesse em soluções naturais para o sono?",
+                "required": true,
+                "data-source": [
+                  { "id": "muito", "title": "Sim, muito interesse" },
+                  { "id": "talvez", "title": "Talvez, quero saber mais" },
+                  { "id": "pouco", "title": "Tenho pouco interesse" }
+                ]
+              },
+              {
+                "type": "Footer",
+                "label": "Ver minha análise",
+                "on-click-action": {
+                  "name": "navigate",
+                  "next": { "type": "screen", "name": "INSIGHT_RESULTADO" },
+                  "payload": {
+                    "idade": "${data.idade}",
+                    "genero": "${data.genero}",
+                    "hora_dormir": "${data.hora_dormir}",
+                    "hora_acordar": "${data.hora_acordar}",
+                    "q1_latencia": "${data.q1_latencia}",
+                    "q2_qualidade": "${data.q2_qualidade}",
+                    "q4_duracao": "${data.q4_duracao}",
+                    "q3_despertar": "${data.q3_despertar}",
+                    "consistencia_sono": "${data.consistencia_sono}",
+                    "como_sente_acordar": "${data.como_sente_acordar}",
+                    "q5_sonolencia": "${data.q5_sonolencia}",
+                    "nivel_estresse": "${data.nivel_estresse}",
+                    "tempo_problemas_sono": "${data.tempo_problemas_sono}",
+                    "q6_fatores": "${data.q6_fatores}",
+                    "q7_metodos": "${data.q7_metodos}",
+                    "objetivos_tratamento": "${data.objetivos_tratamento}",
+                    "q8_interesse": "${form.q8_interesse}"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "INSIGHT_RESULTADO",
+      "title": "Sua análise",
+      "terminal": false,
+      "data": {
+        "idade": { "type": "string", "__example__": "35_44" },
+        "genero": { "type": "string", "__example__": "feminino" },
+        "hora_dormir": { "type": "string", "__example__": "00h_02h" },
+        "hora_acordar": { "type": "string", "__example__": "6h_8h" },
+        "q1_latencia": { "type": "string", "__example__": "30_60" },
+        "q2_qualidade": { "type": "string", "__example__": "ruim" },
+        "q4_duracao": { "type": "string", "__example__": "5_6h" },
+        "q3_despertar": { "type": "string", "__example__": "3_4x" },
+        "consistencia_sono": { "type": "string", "__example__": "variavel" },
+        "como_sente_acordar": { "type": "string", "__example__": "cansado" },
+        "q5_sonolencia": { "type": "string", "__example__": "frequente" },
+        "nivel_estresse": { "type": "string", "__example__": "elevado" },
+        "tempo_problemas_sono": { "type": "string", "__example__": "mais_dois_anos" },
+        "q6_fatores": { "type": "array", "items": { "type": "string" }, "__example__": ["ansiedade", "telas"] },
+        "q7_metodos": { "type": "array", "items": { "type": "string" }, "__example__": ["cha", "meditacao"] },
+        "objetivos_tratamento": { "type": "array", "items": { "type": "string" }, "__example__": ["dormir_rapido", "reduzir_ansiedade"] },
+        "q8_interesse": { "type": "string", "__example__": "muito" }
+      },
+      "layout": {
+        "type": "SingleColumnLayout",
+        "children": [
+          {
+            "type": "Form",
+            "name": "form",
+            "children": [
+              {
+                "type": "TextHeading",
+                "text": "📊 Resultado preliminar"
+              },
+              {
+                "type": "TextBody",
+                "text": "Com base nas suas respostas, identificamos sinais que merecem atenção. Seu padrão de sono pode estar afetando sua saúde, humor e energia diária."
+              },
+              {
+                "type": "TextSubheading",
+                "text": "O que isso significa?"
+              },
+              {
+                "type": "TextBody",
+                "text": "Seus hábitos de sono indicam que você pode se beneficiar de uma abordagem personalizada. Estudos mostram que tratamentos naturais, como o canabidiol (CBD), podem melhorar significativamente a qualidade do sono."
+              },
+              {
+                "type": "TextSubheading",
+                "text": "Próximo passo"
+              },
+              {
+                "type": "TextBody",
+                "text": "Ao finalizar, você receberá logo abaixo um link para acessar sua análise completa e personalizada, com recomendações específicas para o seu caso."
+              },
+              {
+                "type": "Footer",
+                "label": "Enviar e ver minha análise",
+                "on-click-action": {
+                  "name": "navigate",
+                  "next": { "type": "screen", "name": "COMPLETE" },
+                  "payload": {
+                    "idade": "${data.idade}",
+                    "genero": "${data.genero}",
+                    "hora_dormir": "${data.hora_dormir}",
+                    "hora_acordar": "${data.hora_acordar}",
+                    "q1_latencia": "${data.q1_latencia}",
+                    "q2_qualidade": "${data.q2_qualidade}",
+                    "q4_duracao": "${data.q4_duracao}",
+                    "q3_despertar": "${data.q3_despertar}",
+                    "consistencia_sono": "${data.consistencia_sono}",
+                    "como_sente_acordar": "${data.como_sente_acordar}",
+                    "q5_sonolencia": "${data.q5_sonolencia}",
+                    "nivel_estresse": "${data.nivel_estresse}",
+                    "tempo_problemas_sono": "${data.tempo_problemas_sono}",
+                    "q6_fatores": "${data.q6_fatores}",
+                    "q7_metodos": "${data.q7_metodos}",
+                    "objetivos_tratamento": "${data.objetivos_tratamento}",
+                    "q8_interesse": "${data.q8_interesse}"
                   }
                 }
               }
@@ -405,18 +1274,27 @@
     },
     {
       "id": "COMPLETE",
-      "title": "Avaliação Concluída",
+      "title": "Avaliação concluída",
       "terminal": true,
       "success": true,
       "data": {
-        "title": {
-          "type": "string",
-          "__example__": "Avaliação concluída!"
-        },
-        "body": {
-          "type": "string",
-          "__example__": "Obrigado por completar sua avaliação de sono. Em breve você receberá seu resultado personalizado."
-        }
+        "idade": { "type": "string", "__example__": "35_44" },
+        "genero": { "type": "string", "__example__": "feminino" },
+        "hora_dormir": { "type": "string", "__example__": "00h_02h" },
+        "hora_acordar": { "type": "string", "__example__": "6h_8h" },
+        "q1_latencia": { "type": "string", "__example__": "30_60" },
+        "q2_qualidade": { "type": "string", "__example__": "ruim" },
+        "q4_duracao": { "type": "string", "__example__": "5_6h" },
+        "q3_despertar": { "type": "string", "__example__": "3_4x" },
+        "consistencia_sono": { "type": "string", "__example__": "variavel" },
+        "como_sente_acordar": { "type": "string", "__example__": "cansado" },
+        "q5_sonolencia": { "type": "string", "__example__": "frequente" },
+        "nivel_estresse": { "type": "string", "__example__": "elevado" },
+        "tempo_problemas_sono": { "type": "string", "__example__": "mais_dois_anos" },
+        "q6_fatores": { "type": "array", "items": { "type": "string" }, "__example__": ["ansiedade", "telas"] },
+        "q7_metodos": { "type": "array", "items": { "type": "string" }, "__example__": ["cha", "meditacao"] },
+        "objetivos_tratamento": { "type": "array", "items": { "type": "string" }, "__example__": ["dormir_rapido", "reduzir_ansiedade"] },
+        "q8_interesse": { "type": "string", "__example__": "muito" }
       },
       "layout": {
         "type": "SingleColumnLayout",
@@ -427,18 +1305,36 @@
             "children": [
               {
                 "type": "TextHeading",
-                "text": "${data.title}"
+                "text": "✅ Respostas enviadas!"
               },
               {
                 "type": "TextBody",
-                "text": "${data.body}"
+                "text": "Sua avaliação de sono foi concluída com sucesso. Ao finalizar, você receberá logo abaixo um link para acessar sua análise personalizada."
               },
               {
                 "type": "Footer",
                 "label": "Finalizar",
                 "on-click-action": {
                   "name": "complete",
-                  "payload": {}
+                  "payload": {
+                    "idade": "${data.idade}",
+                    "genero": "${data.genero}",
+                    "hora_dormir": "${data.hora_dormir}",
+                    "hora_acordar": "${data.hora_acordar}",
+                    "q1_latencia": "${data.q1_latencia}",
+                    "q2_qualidade": "${data.q2_qualidade}",
+                    "q4_duracao": "${data.q4_duracao}",
+                    "q3_despertar": "${data.q3_despertar}",
+                    "consistencia_sono": "${data.consistencia_sono}",
+                    "como_sente_acordar": "${data.como_sente_acordar}",
+                    "q5_sonolencia": "${data.q5_sonolencia}",
+                    "nivel_estresse": "${data.nivel_estresse}",
+                    "tempo_problemas_sono": "${data.tempo_problemas_sono}",
+                    "q6_fatores": "${data.q6_fatores}",
+                    "q7_metodos": "${data.q7_metodos}",
+                    "objetivos_tratamento": "${data.objetivos_tratamento}",
+                    "q8_interesse": "${data.q8_interesse}"
+                  }
                 }
               }
             ]

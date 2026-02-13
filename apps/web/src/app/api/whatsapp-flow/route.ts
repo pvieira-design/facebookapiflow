@@ -21,21 +21,22 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
 
-    // Debug: log key info
-    const rawKey = process.env.FLOW_PRIVATE_KEY ?? "";
-    console.log("[WhatsApp Flow] Key length:", rawKey.length, "has real newlines:", rawKey.includes("\n"), "has escaped newlines:", rawKey.includes("\\n"), "starts:", rawKey.substring(0, 35));
-
-    // Decrypt the incoming request
     const { decryptedBody, aesKey, iv } = decryptRequest(body);
 
     console.log(
-      "[WhatsApp Flow]",
+      "[WhatsApp Flow] action:",
       decryptedBody.action,
-      decryptedBody.screen ?? "",
+      "screen:",
+      decryptedBody.screen ?? "(none)",
     );
 
     // Process the flow logic
     const response = handleFlowRequest(decryptedBody);
+
+    console.log(
+      "[WhatsApp Flow] response:",
+      JSON.stringify(response).substring(0, 500),
+    );
 
     // Encrypt and return the response
     const encrypted = encryptResponse(response, aesKey, iv);
